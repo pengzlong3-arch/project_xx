@@ -51,7 +51,8 @@ x_test_std = std.transform(x_test)
 
 #直接建立模型,并进行训练
 #线性模型
-estimator_model = LinearRegression(fit_intercept=True)
+# estimator_model = LinearRegression(fit_intercept=True)
+estimator_model = Ridge(fit_intercept=True,alpha=0.1)
 estimator_model.fit(x_train_std,y_train)
 
 # #测试
