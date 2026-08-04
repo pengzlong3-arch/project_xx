@@ -4,7 +4,7 @@
 import numpy as np
 import pandas as pd
 from sklearn.model_selection import train_test_split, GridSearchCV   #分开训练集和测试集的, 做交叉验证和网格搜索的
-from sklearn.preprocessing import StandardScaler                     # 数据标准化的
+from sklearn.preprocessing import StandardScaler, OneHotEncoder  # 数据标准化的
 # from sklearn.neighbors import KNeighborsClassifier                   # KNN算法 分类对象
 from sklearn.linear_model import LinearRegression                 # KNN算法 分类对象
 from sklearn.neighbors import KNeighborsRegressor                    # KNN算法的 回归模型
@@ -17,25 +17,28 @@ from sklearn.linear_model import Lasso, Ridge                    #L1正则化与
 csv = pd.read_csv('八字数据.csv',sep=',',usecols=['天干1','地支1','天干2','地支2','天干3','地支3','天干4','地支4','性别','得分'])
 # csv = pd.read_csv('八字自动录入数据(已评分).csv',sep=',',usecols=['天干1','地支1','天干2','地支2','天干3','地支3','天干4','地支4','性别','得分'])
 print(csv)
-data = csv.query('得分 not in ["争议",0,1,2,3,12,11,10,9]').loc[:,'天干1':'性别'].to_numpy()
-target = csv.query('得分 not in ["争议",0,1,2,3,12,11,10,9]').loc[:,'得分'].to_numpy()
-print(data.shape)
-print(target.shape)
+data = csv.query('得分 not in ["争议",0,1,2,3,12,11,10,9]').loc[:,'天干1':'性别']
+target = csv.query('得分 not in ["争议",0,1,2,3,12,11,10,9]').loc[:,'得分']
+# print(data.shape)
+# print(target.shape)
 print(data)
 print(target)
+#热编码处理
+data = pd.get_dummies(data,columns=['天干1','地支1','天干2','地支2','天干3','地支3','天干4','地支4','性别'],drop_first=True) #dropfirst删掉一个冗余的列
+print(data)
 data_all = np.hstack([data,data**2,data**3])
-print(data_all)
+# print(data_all)
 
 #分离测试集和训练集
-x_train,x_test,y_train,y_test = train_test_split(data_all,target,test_size=0.2,random_state=1,stratify=target)
+x_train,x_test,y_train,y_test = train_test_split(data_all,target,test_size=0.2,random_state=22,stratify=target)
 print(x_train)
 
-#创建标准化的对象
-std = StandardScaler()
-#fit_transform用来标准化训练集的特征数据
-x_train_std = std.fit_transform(x_train)
-#用transform来标准化测试集的特征数据
-x_test_std = std.transform(x_test)
+# #创建标准化的对象
+# std = StandardScaler()
+# #fit_transform用来标准化训练集的特征数据
+# x_train_std = std.fit_transform(x_train)
+# #用transform来标准化测试集的特征数据
+# x_test_std = std.transform(x_test)
 
 # #下面部分先暂时不做
 # #创建KNN分类对象
@@ -53,22 +56,31 @@ x_test_std = std.transform(x_test)
 #线性模型
 # estimator_model = LinearRegression(fit_intercept=True)
 estimator_model = Ridge(fit_intercept=True,alpha=0.1)
-estimator_model.fit(x_train_std,y_train)
-
+# estimator_model.fit(x_train_std,y_train)
+estimator_model.fit(x_train,y_train)
+#
 # #测试
 # y_pre = estimator_model.predict(x_test_std)
+y_pre = estimator_model.predict(x_test)
 # MSE = mean_squared_error(y_test,y_pre)
 # RMSE = root_mean_squared_error(y_test,y_pre)
 # MAE = mean_absolute_error(y_test,y_pre)
 # print(MSE)
 # print(RMSE)
 # print(MAE)
-
-#输入预测
-X = np.array([9,3,5,9,8,6,5,11,1]).reshape(1,-1)
-X_true = np.hstack([X,X**2,X**3])
-X_true_std = std.transform(X_true)
-Y_pre = estimator_model.predict(X_true_std)
-print(estimator_model.coef_)
-print(estimator_model.intercept_)
-print(Y_pre)
+print(y_pre)
+print('-'*23)
+print(y_test)
+#
+# #输入预测
+# X = np.array([9,3,5,9,8,6,5,11,1])
+# # #热编码处理
+# # X = pd.get_dummies(X,drop_first=True)
+# # X_true = np.hstack([X,X**2,X**3])
+# # print(X_true)
+# # # X_true_std = std.transform(X_true)
+# # # Y_pre = estimator_model.predict(X_true_std)
+# # Y_pre = estimator_model.predict(X_true)
+# # # print(estimator_model.coef_)
+# # # print(estimator_model.intercept_)
+# # print(Y_pre)
