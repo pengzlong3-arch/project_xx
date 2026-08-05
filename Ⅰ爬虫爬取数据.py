@@ -5,7 +5,7 @@ import re
 import time
 import requests
 from lxml import html
-from 数据录入 import auto_in
+from 手动数据录入 import auto_in
 
 class Robot():
     def __init__(self):
