@@ -14,6 +14,8 @@ from collections import Counter                                      #用来查�
 import joblib                                                        #保存模型的
 from sklearn.linear_model import Lasso, Ridge                    #L1正则化与L2正则化
 from sklearn.tree import DecisionTreeRegressor
+from sklearn.ensemble import AdaBoostRegressor
+from sklearn.ensemble import GradientBoostingRegressor
 
 csv = pd.read_csv('八字数据.csv',sep=',',usecols=['天干1','地支1','天干2','地支2','天干3','地支3','天干4','地支4','性别','得分'])
 # csv = pd.read_csv('八字自动录入数据(已评分).csv',sep=',',usecols=['天干1','地支1','天干2','地支2','天干3','地支3','天干4','地支4','性别','得分'])
@@ -31,7 +33,7 @@ data_all = np.hstack([data])
 # print(data_all)
 
 #分离测试集和训练集
-x_train,x_test,y_train,y_test = train_test_split(data_all,target,test_size=0.2,random_state=22,stratify=target)
+x_train,x_test,y_train,y_test = train_test_split(data_all,target,test_size=0.2,random_state=11,stratify=target)
 print(x_train)
 
 # #创建标准化的对象
@@ -53,17 +55,23 @@ print(x_train)
 # print(f'最优的评分{estimator_lst.best_params_}')
 # print(f'具体的交叉验证结果: {estimator_lst.cv_results_}')
 
+
 #直接建立模型,并进行训练
 #线性模型，树模型
 # estimator_model = LinearRegression(fit_intercept=True)
 # estimator_model = Ridge(fit_intercept=True,alpha=0.1)
-estimator_model = DecisionTreeRegressor(max_depth=10)
-estimator_model.fit(x_train,y_train)
-#集成学习
+# estimator_model = DecisionTreeRegressor(max_depth=18)
+# estimator_model.fit(x_train,y_train)
+#集成学习: 自适应提升、GBDT(梯度提升树)
+# estimator_model2 = AdaBoostRegressor(estimator=estimator_model,n_estimators=80,learning_rate=0.1)
+estimator_model2 = GradientBoostingRegressor(n_estimators=120,learning_rate=0.025,max_depth=3)
+estimator_model2.fit(x_train,y_train)
+
 
 # #测试
 # y_pre = estimator_model.predict(x_test_std)
-y_pre = estimator_model.predict(x_test)
+# y_pre = estimator_model.predict(x_test)
+y_pre = estimator_model2.predict(x_test)
 MSE = mean_squared_error(y_test,y_pre)
 RMSE = root_mean_squared_error(y_test,y_pre)
 MAE = mean_absolute_error(y_test,y_pre)
