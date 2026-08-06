@@ -38,6 +38,7 @@ class Robot():
             res = requests.get(self.url,headers=self.headers,params=self.params,timeout=12)
             res_json = res.json()
             msg_lst = res_json.get("getalbum_resp",[])    #如果没有就返回[],避免报错
+            print(msg_lst)
             if msg_lst:
                 self.url_detail.append(msg_lst['url'])   #这部操作是为了把第一个也加进去
             msg_art = msg_lst.get('article_list', [])
