@@ -13,7 +13,7 @@ from sklearn.linear_model import Lasso, Ridge                    #L1正则化与
 from sklearn.utils import class_weight                           #权重平衡
 
 
-def xboosting():
+def xgboosting():
     # 1.加载数据
     csv = pd.read_csv('data/八字数据.csv', sep=',', usecols=['天干1', '地支1', '天干2', '地支2', '天干3', '地支3', '天干4', '地支4', '性别', '得分'])
     # 2.数据预处理
@@ -39,4 +39,4 @@ def xboosting():
     print(f"分类评估报告\n{classification_report(y_test,y_pre)}")
 
 if __name__ == '__main__':
-    xboosting()
+    xgboosting()
