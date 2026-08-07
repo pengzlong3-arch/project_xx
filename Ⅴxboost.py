@@ -28,8 +28,8 @@ def xboosting():
     sw = class_weight.compute_sample_weight('balanced', y_train)   #平衡权重
     estimator = xgb.XGBClassifier(
         max_depth=5,                # 树的最大深度
-        n_estimators=100,           # 树的数量
-        learning_rate=0.1,          # 学习率
+        n_estimators=120,           # 树的数量
+        learning_rate=0.01,          # 学习率
         random_state=23,            # 随机种子
         objective='multi:softmax'   # 多分类问题, 使用多分类模型.
     )
