@@ -9,19 +9,20 @@ from sklearn.preprocessing import StandardScaler, OneHotEncoder  # 数据标准�
 from sklearn.linear_model import LinearRegression                 # KNN算法 分类对象
 from sklearn.neighbors import KNeighborsRegressor                    # KNN算法的 回归模型
 # from sklearn.metrics import accuracy_score                           # 模型评估的, 计算模型预测的准确率
-from sklearn.metrics import mean_squared_error,root_mean_squared_error,mean_absolute_error,r2_score    # 模型评估
+from sklearn.metrics import mean_squared_error,root_mean_squared_error,mean_absolute_error,r2_score,classification_report   # 模型评估
 from collections import Counter                                      #用来查看标签分布情况的
 import joblib                                                        #保存模型的
 from sklearn.linear_model import Lasso, Ridge                    #L1正则化与L2正则化
 from sklearn.tree import DecisionTreeRegressor
 from sklearn.ensemble import AdaBoostRegressor
 from sklearn.ensemble import GradientBoostingRegressor
+import xgboost as xgb
 
-csv = pd.read_csv('八字数据.csv',sep=',',usecols=['天干1','地支1','天干2','地支2','天干3','地支3','天干4','地支4','性别','得分'])
+csv = pd.read_csv('data/八字数据.csv', sep=',', usecols=['天干1', '地支1', '天干2', '地支2', '天干3', '地支3', '天干4', '地支4', '性别', '得分'])
 # csv = pd.read_csv('八字自动录入数据(已评分).csv',sep=',',usecols=['天干1','地支1','天干2','地支2','天干3','地支3','天干4','地支4','性别','得分'])
 print(csv)
 data = csv.query('得分 not in ["争议",0,1,2,3,12,11,10,9]').loc[:,'天干1':'性别']
-target = csv.query('得分 not in ["争议",0,1,2,3,12,11,10,9]').loc[:,'得分']
+target = csv.query('得分 not in ["争议",0,1,2,3,12,11,10,9]').loc[:,'得分'] -4
 # print(data.shape)
 # print(target.shape)
 print(data)
@@ -62,9 +63,10 @@ print(x_train)
 # estimator_model = Ridge(fit_intercept=True,alpha=0.1)
 # estimator_model = DecisionTreeRegressor(max_depth=18)
 # estimator_model.fit(x_train,y_train)
-#集成学习: 自适应提升、GBDT(梯度提升树)
+#集成学习: 自适应提升、GBDT(梯度提升树)、xgboost
 # estimator_model2 = AdaBoostRegressor(estimator=estimator_model,n_estimators=80,learning_rate=0.1)
-estimator_model2 = GradientBoostingRegressor(n_estimators=120,learning_rate=0.025,max_depth=3)
+# estimator_model2 = GradientBoostingRegressor(n_estimators=120,learning_rate=0.025,max_depth=3)
+estimator_model2 = xgb.XGBClassifier(n_estimators=100,max_depth=5,learning_rate=0.1,objective='multi:softmax',random_state=22)
 estimator_model2.fit(x_train,y_train)
 
 
@@ -72,14 +74,15 @@ estimator_model2.fit(x_train,y_train)
 # y_pre = estimator_model.predict(x_test_std)
 # y_pre = estimator_model.predict(x_test)
 y_pre = estimator_model2.predict(x_test)
-MSE = mean_squared_error(y_test,y_pre)
-RMSE = root_mean_squared_error(y_test,y_pre)
-MAE = mean_absolute_error(y_test,y_pre)
-r2 = r2_score(y_test,y_pre)
-print(MSE)
-print(RMSE)
-print(MAE)
-print(r2)
+# MSE = mean_squared_error(y_test,y_pre)
+# RMSE = root_mean_squared_error(y_test,y_pre)
+# MAE = mean_absolute_error(y_test,y_pre)
+# r2 = r2_score(y_test,y_pre)
+# print(MSE)
+# print(RMSE)
+# print(MAE)
+# print(r2)
+print(f'分类评估报告{classification_report(y_test,y_pre)}')
 print(y_pre)
 print('-'*23)
 print(y_test.to_numpy())

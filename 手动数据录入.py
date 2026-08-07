@@ -12,8 +12,8 @@ import os
 
 def exist():
 #创建数据文件
-    if os.path.exists('八字数据.csv'):
-        csv = pd.read_csv('八字数据.csv', sep=',', usecols= ['天干1','地支1',
+    if os.path.exists('data/八字数据.csv'):
+        csv = pd.read_csv('data/八字数据.csv', sep=',', usecols= ['天干1', '地支1',
                                                     '天干2','地支2','天干3','地支3',
                                                     '天干4','地支4','性别','合并','得分','评语'])
         # print(csv)
@@ -194,7 +194,7 @@ def auto_save(x):
     lst = pd.DataFrame(lst_all, columns= ['天干1','地支1',
                                                     '天干2','地支2','天干3','地支3',
                                                     '天干4','地支4','性别','合并','得分','评语'])
-    if os.path.exists('八字自动录入数据.csv'):
+    if os.path.exists('data/八字自动录入数据.csv'):
         lst.to_csv('八字自动录入数据.csv', sep=',', index= False, mode='a',header=False)
     else:
         lst.to_csv('八字自动录入数据.csv', sep=',', index= False, mode='w',header=True)
