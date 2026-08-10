@@ -189,15 +189,13 @@ def auto_in(res, res_all):
 
 
 def auto_save(x):
-    lst_all = []
-    lst_all.append(x)
-    lst = pd.DataFrame(lst_all, columns= ['天干1','地支1',
+    lst = pd.DataFrame([x], columns= ['天干1','地支1',
                                                     '天干2','地支2','天干3','地支3',
                                                     '天干4','地支4','性别','合并','得分','评语'])
     if os.path.exists('data/八字自动录入数据.csv'):
-        lst.to_csv('八字自动录入数据.csv', sep=',', index= False, mode='a',header=False)
+        lst.to_csv('data/八字自动录入数据.csv', sep=',', index= False, mode='a',header=False,encoding='gbk')  #有时候要打开wps改数据,为了避免冲突直接用gbk了
     else:
-        lst.to_csv('八字自动录入数据.csv', sep=',', index= False, mode='w',header=True)
+        lst.to_csv('data/八字自动录入数据.csv', sep=',', index= False, mode='w',header=True,encoding='gbk')
     print('已成功录入')
 
 if __name__ == '__main__':

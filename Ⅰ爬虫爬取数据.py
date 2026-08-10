@@ -38,9 +38,7 @@ class Robot():
             res = requests.get(self.url,headers=self.headers,params=self.params,timeout=12)
             res_json = res.json()
             msg_lst = res_json.get("getalbum_resp",[])    #如果没有就返回[],避免报错
-            print(msg_lst)
-            if msg_lst:
-                self.url_detail.append(msg_lst['url'])   #这部操作是为了把第一个也加进去
+            print(f'{msg_lst}\n')
             msg_art = msg_lst.get('article_list', [])
             if not msg_art:
                 break
@@ -56,13 +54,13 @@ class Robot():
             # print(msg_lst)
 
     def save_html_all(self):
-        with open('./网页汇总.txt',mode='w',encoding='utf-8') as f:
+        with open('data/网页汇总.txt', mode='w', encoding='utf-8') as f:
             for i in self.url_detail:
                 f.write(i)
                 f.write('\n')
 
     def read_html_all(self):
-        with open('./网页汇总.txt',mode='r',encoding='utf-8')as f:
+        with open('data/网页汇总.txt',mode='r',encoding='utf-8')as f:
             count = 0
             for i in f:
                 # count += 1
