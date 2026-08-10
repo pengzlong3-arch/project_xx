@@ -69,6 +69,8 @@ def model_build():
     print(f'正确率为{estimator1.score(x_test,y_test)}')
     print(f'正确率为{accuracy_score(y_test,y_pre1)}')
 
+    #建立随机森林看看效果
+
 
 if __name__ == '__main__':
     model_build()
