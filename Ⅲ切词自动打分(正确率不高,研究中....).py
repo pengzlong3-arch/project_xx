@@ -60,8 +60,9 @@ def model_build():
     estimator1 = xgb.XGBClassifier(
         enable_categorical=True,
         max_depth= 3,
-        n_estimators=100,
-        random_state=6,
+        n_estimators=50,
+        random_state=9,
+        learning_rate=0.01,
         objective='multi:softmax'
     )
     estimator1.fit(x_train,y_train)
