@@ -16,7 +16,7 @@ def logisticregression():
     data = csv.query('得分 not in ["争议",0,1,2,3,12,11,10,9]').loc[:, '天干1':'性别']
     target = csv.query('得分 not in ["争议",0,1,2,3,12,11,10,9]').loc[:, '得分']
     # 3.特征工程
-    # 3.1分类特征热编码
+    # 3.1分类特征热编码(仅做探索性测试,应该在划分训练集之后再做)
     data = pd.get_dummies(data, columns=['天干1', '地支1', '天干2', '地支2', '天干3', '地支3', '天干4', '地支4', '性别'],drop_first=True)  # drop_first删掉一个冗余的列
     # 3.2切分测试集训练集
     x_train, x_test, y_train, y_test = train_test_split(data, target, test_size=0.2, random_state=11, stratify=target)
