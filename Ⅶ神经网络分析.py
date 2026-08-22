@@ -149,7 +149,7 @@ def evaluate():
     model.load_state_dict(torch.load('model/predict.pth'))
 
     #构建数据加载器
-    dataloader = DataLoader(test_dataset,shuffle=True,batch_size=16)
+    dataloader = DataLoader(test_dataset,shuffle=True,batch_size=19)
 
     #评估数据集
     correct = 0
