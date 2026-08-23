@@ -21,7 +21,7 @@ def create_data():
 
 
     #划分训练集测试集
-    x_train,x_test,y_train,y_test= train_test_split(x,y,test_size=0.2,random_state=0,stratify=y)
+    x_train,x_test,y_train,y_test= train_test_split(x,y,test_size=0.2,random_state=5,stratify=y)
 
     # x_train.info()    #全是str得改
     x_train.astype('float32')
@@ -70,7 +70,7 @@ class Predict_model(nn.Module):
         #随机失活
         self.dropout = nn.Dropout(0.2)
     #定义前向传播方法
-    def forward(self, x):
+    def forward(self, x):         #forward是自动调用的
         #隐藏层1
         x = torch.relu(self.linear1(x))
         x = self.dropout(x)
